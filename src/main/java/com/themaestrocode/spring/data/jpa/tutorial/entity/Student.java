@@ -11,14 +11,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "Student_table") // to change the default student table name
+@Table(name = "Student_table",
+        uniqueConstraints = @UniqueConstraint(name = "emailid_unique", columnNames = "email_address")) // to change the default student table name
 public class Student {
 
     @Id
     @SequenceGenerator(
-            name = "student_sequence",
-            sequenceName = "student_sequence",
-            allocationSize = 1
+            name = "student_sequence", sequenceName = "student_sequence", allocationSize = 1
+    )
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "student_sequence"
     )
     @Column(name = "student_id")
     private Long studentId;
@@ -26,12 +27,8 @@ public class Student {
     private String firstName;
     @Column(name = "last_name")
     private String lastName;
-    @Column(name = "email_address")
+    @Column(name = "email_address", nullable = false)
     private String emailId;
-    @Column(name = "guardian_name")
-    private String guardianName;
-    @Column(name = "guardian_email")
-    private String guardianEmail;
-    @Column(name = "guardian_phone_no")
-    private String guardianMobile;
+    @Embedded
+    private Guardian guardian;
 }
